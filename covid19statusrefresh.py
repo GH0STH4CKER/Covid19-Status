@@ -1,4 +1,4 @@
-import requests , subprocess , socket , time , os
+import requests , subprocess , socket , time , os , json
 from colorama import Fore , init
 init()
 
@@ -31,73 +31,45 @@ while True:
       
     print("...Connected To Host...\n")
 
-    data = alldata.replace("{"," ")
-    data = data.replace("{"," ")
-    #getting local data location
-    Ltotal = data.find('local_total_cases') 
-    Ldeath = data.find('local_death') 
-    Lrecov = data.find('local_recovered') 
-    #Getting Global data location
-    Gtotal = data.find("global_total_cases")
-    Gdeath = data.find("global_deaths")
-    Grecov = data.find("global_recovered")
-    updateTD = data.find("update_date_time")  
-  #Getting numeric value for each data
-    LocalTotal = data[(Ltotal+19):(Ltotal+25)]
-    LocalDeaths = data[(Ldeath+14):(Ldeath+18)]
-    LocalRecovered = data[(Lrecov+17):(Lrecov+23)]
+    hpb = json.loads(alldata)
+    data = hpb['data']
 
-    GlobalTotal = data[(Gtotal+20):(Gtotal+32)]
-    GlobalDeaths = data[(Gdeath+15):(Gdeath+23)]
-    GlobalRecovered = data[(Grecov+18):(Grecov+31)]
-    UPDATEDdatetime = data[(updateTD+19):(updateTD+38)]
-  #Removing last character until the variable value is numeric
-    while True:
-        LocalDeaths = LocalDeaths[:-1]
-        if LocalDeaths.isnumeric() == True :
-             break
-    while True:
-        LocalTotal = LocalTotal[:-1]
-        if LocalTotal.isnumeric() == True :
-             break
-    while True:
-        LocalRecovered = LocalRecovered[:-1]
-        if LocalRecovered.isnumeric() == True :
-             break
-  
-    while True:
-        GlobalDeaths = GlobalDeaths[:-1]
-        if GlobalDeaths.isnumeric() == True :
-             break
-    while True:
-        GlobalTotal = GlobalTotal[:-1]
-        if GlobalTotal.isnumeric() == True :
-             break
-    while True:
-        GlobalRecovered = GlobalRecovered[:-1]
-        if GlobalRecovered.isnumeric() == True :
-             break
+
+    #getting local data location
+    Ltotal = data['local_total_cases'] 
+    Ldeath = data['local_deaths'] 
+    Lrecov = data['local_recovered'] 
+    Lnewd = data['local_new_deaths'] 
+    #Getting Global data location
+    Gtotal = data["global_total_cases"]
+    Gdeath = data["global_deaths"]
+    Grecov = data["global_recovered"]
+    Gnewd = data['global_new_deaths'] 
+    updateTD = data["update_date_time"]  
   
   
     print("-----COVID19 STATUS----\n")
  
     print(Fore.LIGHTCYAN_EX + "[+] Sri Lanka Status : \n")
-    print(Fore.LIGHTGREEN_EX + "Local Infected :",LocalTotal)
-    print("Local Deaths :",LocalDeaths)
-    print("Local Recovered :",LocalRecovered)
+    print(Fore.LIGHTGREEN_EX + "Local Total Cases :",Ltotal)
+    print("Local Deaths :",Ldeath)
+    print("Local Recovered :",Lrecov)
+    print("Local New Deths :",Lnewd)
 
     print("")
     print(Fore.LIGHTCYAN_EX + "[+] Global Status : \n")
-    print(Fore.LIGHTGREEN_EX + "Global Infected :",GlobalTotal)
-    print("Global Deaths :",GlobalDeaths)
-    print("Global Recovered :",GlobalRecovered)
-    print(Fore.LIGHTCYAN_EX + "\nLast Updated :",UPDATEDdatetime)
-    print("\nRefresh Rate : 5 seconds")
+    print(Fore.LIGHTGREEN_EX + "Global Total Cases :",Gtotal)
+    print("Global Deaths :",Gdeath)
+    print("Global Recovered :",Grecov)
+    print("Global New Deths :",Gnewd)
+    print(Fore.LIGHTCYAN_EX + "\nLast Updated :",updateTD)
+    print("\nRefresh Rate : 1 Minute")
   else:
+    
       print("Error ! Unable to connect to host")
       print("Status code : ",rcode)
 
-  time.sleep(5)
+  time.sleep(60)
   os.system('cls')
-   
+
 input("\nExit >")
